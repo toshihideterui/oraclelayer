@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oracle-layer-v1';
+const CACHE_NAME = 'oracle-layer-v2';
 const ASSETS = [
   '/',
   '/index.html',
