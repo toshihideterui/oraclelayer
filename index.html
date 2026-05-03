@@ -15,14 +15,11 @@
 <style>
   :root {
     --bg: #050d1a;
-    --bg2: #0a1628;
     --blue: #4a9eff;
     --blue-dim: #1e4a8a;
     --silver: #c8d8f0;
     --silver-dim: #6a8aaa;
-    --gold: #d4af6a;
     --white: #e8f0ff;
-    --glow: rgba(74,158,255,0.35);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,389 +32,288 @@
     overflow-x: hidden;
   }
 
-  /* Star canvas */
   #stars {
-    position: fixed;
-    top: 0; left: 0;
+    position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
+    z-index: 0; pointer-events: none;
   }
 
   .container {
-    position: relative;
-    z-index: 1;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 20px 16px 40px;
+    position: relative; z-index: 1;
+    max-width: 480px; margin: 0 auto;
+    padding: 20px 16px 60px;
   }
 
-  /* Header */
   .header {
-    text-align: center;
-    padding: 24px 0 16px;
+    text-align: center; padding: 24px 0 16px;
     animation: fadeDown 1s ease both;
   }
 
   .logo {
     font-family: 'Cinzel', serif;
-    font-size: 28px;
-    letter-spacing: 6px;
+    font-size: 28px; letter-spacing: 6px;
     background: linear-gradient(135deg, var(--silver), var(--blue), var(--silver));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .logo-sub {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--silver-dim);
-    margin-top: 4px;
+    font-size: 11px; letter-spacing: 3px;
+    color: var(--silver-dim); margin-top: 4px;
   }
 
-  /* Moon display */
-  .moon-section {
-    text-align: center;
-    margin: 20px 0;
-    animation: fadeIn 1.2s ease both;
-  }
-
-  .moon-circle {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 12px;
-    position: relative;
-  }
+  .moon-section { text-align: center; margin: 18px 0; animation: fadeIn 1.2s ease both; }
 
   .moon-svg {
-    width: 100%;
-    height: 100%;
+    width: 90px; height: 90px;
     filter: drop-shadow(0 0 18px rgba(74,158,255,0.6));
     animation: moonPulse 4s ease-in-out infinite;
   }
 
   @keyframes moonPulse {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(74,158,255,0.6)); }
-    50% { filter: drop-shadow(0 0 32px rgba(74,158,255,0.9)); }
+    0%,100% { filter: drop-shadow(0 0 18px rgba(74,158,255,0.6)); }
+    50%      { filter: drop-shadow(0 0 32px rgba(74,158,255,0.9)); }
   }
 
-  .moon-info {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+  .moon-badges {
+    display: flex; justify-content: center;
+    gap: 8px; flex-wrap: wrap; margin-top: 10px;
   }
 
-  .moon-badge {
+  .badge {
     background: rgba(74,158,255,0.1);
     border: 1px solid rgba(74,158,255,0.3);
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 12px;
-    color: var(--silver);
-    letter-spacing: 1px;
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; color: var(--silver); letter-spacing: 1px;
   }
 
-  /* Theme selector */
-  .theme-section {
-    margin: 20px 0;
-    animation: fadeIn 1.4s ease both;
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 18px 0; opacity: 0.4;
+  }
+  .divider::before,.divider::after {
+    content:''; flex:1; height:1px;
+    background: linear-gradient(90deg, transparent, var(--blue-dim));
+  }
+  .divider::after { background: linear-gradient(90deg, var(--blue-dim), transparent); }
+  .divider span { font-size: 13px; }
+
+  .profile-section { animation: fadeIn 1.3s ease both; }
+
+  .section-label {
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--silver-dim); text-align: center; margin-bottom: 12px;
   }
 
-  .theme-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--silver-dim);
-    text-align: center;
-    margin-bottom: 10px;
+  .form-row { margin-bottom: 12px; }
+
+  .form-label {
+    font-size: 11px; color: var(--silver-dim);
+    letter-spacing: 1px; margin-bottom: 5px; display: block;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(74,158,255,0.22);
+    border-radius: 10px; padding: 10px 14px;
+    color: var(--silver); font-size: 14px;
+    font-family: 'Noto Serif JP', serif;
+    outline: none; transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 10px rgba(74,158,255,0.15);
+  }
+
+  .form-input::placeholder { color: var(--silver-dim); }
+
+  /* date input color fix */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6) sepia(1) saturate(3) hue-rotate(180deg);
+  }
+
+  .gender-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  }
+
+  .gender-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(74,158,255,0.22);
+    border-radius: 10px; padding: 10px 4px;
+    color: var(--silver-dim); font-size: 13px;
+    font-family: 'Noto Serif JP', serif;
+    cursor: pointer; transition: all 0.3s; text-align: center;
+  }
+
+  .gender-btn.active, .gender-btn:hover {
+    background: rgba(74,158,255,0.15);
+    border-color: var(--blue); color: var(--silver);
+    box-shadow: 0 0 10px rgba(74,158,255,0.2);
   }
 
   .theme-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
   }
 
   .theme-btn {
     background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(74,158,255,0.2);
-    border-radius: 10px;
-    padding: 10px 4px;
-    color: var(--silver-dim);
+    border: 1px solid rgba(74,158,255,0.22);
+    border-radius: 10px; padding: 10px 4px;
+    color: var(--silver-dim); font-size: 11px;
     font-family: 'Noto Serif JP', serif;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-    line-height: 1.4;
+    cursor: pointer; transition: all 0.3s; text-align: center; line-height: 1.5;
   }
 
-  .theme-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
+  .theme-btn .icon { font-size: 18px; display: block; margin-bottom: 3px; }
 
-  .theme-btn:hover, .theme-btn.active {
+  .theme-btn.active, .theme-btn:hover {
     background: rgba(74,158,255,0.15);
-    border-color: var(--blue);
-    color: var(--silver);
-    box-shadow: 0 0 12px rgba(74,158,255,0.2);
+    border-color: var(--blue); color: var(--silver);
+    box-shadow: 0 0 10px rgba(74,158,255,0.2);
   }
 
-  /* Generate button */
   .gen-btn {
     width: 100%;
     background: linear-gradient(135deg, #1a3a6a, #0d2244);
-    border: 1px solid var(--blue-dim);
-    border-radius: 14px;
-    padding: 16px;
-    color: var(--silver);
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    letter-spacing: 3px;
-    cursor: pointer;
-    margin: 16px 0;
-    transition: all 0.4s;
-    position: relative;
-    overflow: hidden;
+    border: 1px solid var(--blue-dim); border-radius: 14px;
+    padding: 16px; color: var(--silver);
+    font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 3px;
+    cursor: pointer; margin: 18px 0; transition: all 0.4s;
+    position: relative; overflow: hidden;
     animation: fadeIn 1.6s ease both;
   }
 
   .gen-btn::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
+    content: ''; position: absolute; top: 0; left: -100%;
     width: 100%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(74,158,255,0.15), transparent);
     transition: left 0.5s;
   }
 
   .gen-btn:hover::before { left: 100%; }
+  .gen-btn:hover { border-color: var(--blue); box-shadow: 0 0 20px rgba(74,158,255,0.3); color: var(--white); }
+  .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .gen-btn:hover {
-    border-color: var(--blue);
-    box-shadow: 0 0 20px rgba(74,158,255,0.3);
-    color: var(--white);
-  }
-
-  .gen-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Message card */
   .card {
     background: linear-gradient(145deg, rgba(10,22,40,0.95), rgba(5,13,26,0.98));
-    border: 1px solid rgba(74,158,255,0.25);
-    border-radius: 20px;
-    padding: 28px 24px;
-    margin-top: 4px;
+    border: 1px solid rgba(74,158,255,0.25); border-radius: 20px;
+    padding: 28px 24px; margin-top: 4px;
     box-shadow: 0 8px 40px rgba(0,0,50,0.5), inset 0 1px 0 rgba(200,216,240,0.08);
-    animation: cardReveal 0.8s ease both;
     display: none;
   }
 
-  .card.show { display: block; }
+  .card.show { display: block; animation: cardReveal 0.8s ease both; }
 
   @keyframes cardReveal {
     from { opacity: 0; transform: translateY(20px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   .card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    padding-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px; padding-bottom: 14px;
     border-bottom: 1px solid rgba(74,158,255,0.15);
   }
 
   .luna-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     background: linear-gradient(135deg, #1a3a6a, #0d2244);
-    border: 1.5px solid var(--blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    border: 1.5px solid var(--blue); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
     box-shadow: 0 0 12px rgba(74,158,255,0.3);
   }
 
-  .luna-name {
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    color: var(--blue);
-    letter-spacing: 2px;
-  }
+  .luna-name { font-family: 'Cinzel', serif; font-size: 13px; color: var(--blue); letter-spacing: 2px; }
+  .luna-title { font-size: 10px; color: var(--silver-dim); letter-spacing: 1px; }
 
-  .luna-title {
-    font-size: 10px;
-    color: var(--silver-dim);
-    letter-spacing: 1px;
+  .message-to {
+    font-size: 13px; color: var(--blue);
+    margin-bottom: 10px; letter-spacing: 1px;
+    font-family: 'Cinzel', serif;
   }
 
   .message-text {
-    font-size: 15px;
-    line-height: 2;
-    color: var(--white);
-    font-weight: 300;
-    white-space: pre-wrap;
+    font-size: 15px; line-height: 2;
+    color: var(--white); font-weight: 300; white-space: pre-wrap;
   }
 
   .message-text.loading {
-    color: var(--silver-dim);
-    font-style: italic;
-    text-align: center;
-    padding: 10px 0;
+    color: var(--silver-dim); font-style: italic;
+    text-align: center; padding: 10px 0;
   }
 
   .card-footer {
-    margin-top: 18px;
-    padding-top: 14px;
+    margin-top: 18px; padding-top: 14px;
     border-top: 1px solid rgba(74,158,255,0.15);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
   }
 
-  .card-date {
-    font-size: 11px;
-    color: var(--silver-dim);
-    letter-spacing: 1px;
-  }
+  .card-date { font-size: 11px; color: var(--silver-dim); letter-spacing: 1px; }
 
   .share-btn {
-    background: transparent;
-    border: 1px solid rgba(74,158,255,0.3);
-    border-radius: 8px;
-    padding: 6px 14px;
-    color: var(--silver-dim);
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 1px;
+    background: transparent; border: 1px solid rgba(74,158,255,0.3);
+    border-radius: 8px; padding: 6px 14px;
+    color: var(--silver-dim); font-size: 11px; cursor: pointer;
+    transition: all 0.3s; letter-spacing: 1px;
   }
+  .share-btn:hover { border-color: var(--blue); color: var(--silver); }
 
-  .share-btn:hover {
-    border-color: var(--blue);
-    color: var(--silver);
-  }
-
-  /* Settings */
-  .settings-section {
-    margin-top: 28px;
-    animation: fadeIn 1.8s ease both;
-  }
+  .settings-section { margin-top: 28px; animation: fadeIn 1.8s ease both; }
 
   .settings-toggle {
-    background: transparent;
-    border: none;
-    color: var(--silver-dim);
-    font-size: 11px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
-    padding: 8px;
+    background: transparent; border: none; color: var(--silver-dim);
+    font-size: 11px; letter-spacing: 2px; cursor: pointer;
+    width: 100%; text-align: center; padding: 8px;
     font-family: 'Noto Serif JP', serif;
   }
-
   .settings-toggle:hover { color: var(--silver); }
 
   .settings-panel {
-    display: none;
-    margin-top: 12px;
+    display: none; margin-top: 12px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(74,158,255,0.15);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 12px; padding: 16px;
   }
-
   .settings-panel.show { display: block; }
 
-  .setting-row {
-    margin-bottom: 12px;
-  }
-
-  .setting-label {
-    font-size: 11px;
-    color: var(--silver-dim);
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
+  .setting-row { margin-bottom: 12px; }
+  .setting-label { font-size: 11px; color: var(--silver-dim); letter-spacing: 1px; margin-bottom: 6px; }
 
   .setting-input {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(74,158,255,0.2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: var(--silver);
-    font-size: 13px;
-    font-family: monospace;
-    outline: none;
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(74,158,255,0.2); border-radius: 8px;
+    padding: 8px 12px; color: var(--silver); font-size: 13px;
+    font-family: monospace; outline: none;
   }
-
   .setting-input:focus { border-color: var(--blue); }
+
+  .key-toggle {
+    background: transparent; border: none;
+    color: var(--silver-dim); font-size: 11px;
+    cursor: pointer; float: right; margin-top: -28px; margin-right: 8px;
+    position: relative; z-index: 1;
+  }
 
   .save-btn {
     background: rgba(74,158,255,0.15);
-    border: 1px solid var(--blue-dim);
-    border-radius: 8px;
-    padding: 8px 20px;
-    color: var(--silver);
-    font-size: 12px;
-    cursor: pointer;
-    width: 100%;
-    letter-spacing: 1px;
-    transition: all 0.3s;
-    margin-top: 4px;
+    border: 1px solid var(--blue-dim); border-radius: 8px;
+    padding: 8px 20px; color: var(--silver); font-size: 12px;
+    cursor: pointer; width: 100%; letter-spacing: 1px;
+    transition: all 0.3s; margin-top: 4px;
   }
-
   .save-btn:hover { background: rgba(74,158,255,0.25); }
 
-  /* Divider */
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    opacity: 0.4;
-  }
-
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--blue-dim));
-  }
-
-  .divider::after { background: linear-gradient(90deg, var(--blue-dim), transparent); }
-
-  .divider span { font-size: 14px; }
-
-  /* Animations */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Shooting star */
-  .shooting-star {
-    position: fixed;
-    width: 2px;
-    height: 2px;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
+    to   { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
@@ -426,43 +322,61 @@
 <canvas id="stars"></canvas>
 
 <div class="container">
-  <!-- Header -->
+
   <div class="header">
     <div class="logo">ORACLE LAYER</div>
     <div class="logo-sub">月の精霊 Luna からのメッセージ</div>
   </div>
 
-  <!-- Moon -->
   <div class="moon-section">
-    <div class="moon-circle">
-      <svg class="moon-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="moonGrad" cx="40%" cy="40%">
-            <stop offset="0%" stop-color="#c8d8f0"/>
-            <stop offset="60%" stop-color="#7a9fcc"/>
-            <stop offset="100%" stop-color="#2a4a7a"/>
-          </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <circle cx="50" cy="50" r="42" fill="url(#moonGrad)" filter="url(#glow)"/>
-        <circle cx="35" cy="38" r="5" fill="rgba(100,140,200,0.3)"/>
-        <circle cx="60" cy="55" r="7" fill="rgba(100,140,200,0.2)"/>
-        <circle cx="45" cy="62" r="3" fill="rgba(100,140,200,0.25)"/>
-      </svg>
+    <svg class="moon-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mg" cx="40%" cy="40%">
+          <stop offset="0%" stop-color="#c8d8f0"/>
+          <stop offset="60%" stop-color="#7a9fcc"/>
+          <stop offset="100%" stop-color="#2a4a7a"/>
+        </radialGradient>
+        <filter id="gf"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <circle cx="50" cy="50" r="42" fill="url(#mg)" filter="url(#gf)"/>
+      <circle cx="35" cy="38" r="5" fill="rgba(100,140,200,0.3)"/>
+      <circle cx="60" cy="55" r="7" fill="rgba(100,140,200,0.2)"/>
+      <circle cx="45" cy="62" r="3" fill="rgba(100,140,200,0.25)"/>
+    </svg>
+    <div class="moon-badges" id="moonBadges"></div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Profile -->
+  <div class="profile-section">
+    <div class="section-label">— あなたの情報を教えてください —</div>
+
+    <div class="form-row">
+      <label class="form-label">お名前（ニックネームでも可）</label>
+      <input class="form-input" type="text" id="userName" placeholder="例：さくら" maxlength="20">
     </div>
-    <div class="moon-info" id="moonInfo">
-      <!-- filled by JS -->
+
+    <div class="form-row">
+      <label class="form-label">生年月日</label>
+      <input class="form-input" type="date" id="userBirth">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">性別</label>
+      <div class="gender-row">
+        <button class="gender-btn active" data-gender="female" onclick="selectGender(this)">♀ 女性</button>
+        <button class="gender-btn" data-gender="male" onclick="selectGender(this)">♂ 男性</button>
+        <button class="gender-btn" data-gender="other" onclick="selectGender(this)">✧ その他</button>
+      </div>
     </div>
   </div>
 
   <div class="divider"><span>✦</span></div>
 
-  <!-- Theme selector -->
-  <div class="theme-section">
-    <div class="theme-label">— テーマを選ぶ —</div>
+  <!-- Theme -->
+  <div style="animation: fadeIn 1.5s ease both;">
+    <div class="section-label">— テーマを選ぶ —</div>
     <div class="theme-grid">
       <button class="theme-btn active" data-theme="love" onclick="selectTheme(this)">
         <span class="icon">💫</span>恋愛
@@ -479,12 +393,12 @@
     </div>
   </div>
 
-  <!-- Generate button -->
+  <!-- Button -->
   <button class="gen-btn" id="genBtn" onclick="generateMessage()">
     ✦ 今日のメッセージを受け取る ✦
   </button>
 
-  <!-- Message card -->
+  <!-- Card -->
   <div class="card" id="card">
     <div class="card-header">
       <div class="luna-avatar">🌙</div>
@@ -493,6 +407,7 @@
         <div class="luna-title">月の精霊 · 星の導き手</div>
       </div>
     </div>
+    <div class="message-to" id="messageTo"></div>
     <div class="message-text" id="messageText"></div>
     <div class="card-footer">
       <div class="card-date" id="cardDate"></div>
@@ -505,296 +420,266 @@
     <button class="settings-toggle" onclick="toggleSettings()">⚙ API設定</button>
     <div class="settings-panel" id="settingsPanel">
       <div class="setting-row">
-        <div class="setting-label">Gemma API Key (Google AI Studio)</div>
-        <input class="setting-input" type="password" id="gemmaKey" placeholder="AIza...">
-      </div>
-      <div class="setting-row">
         <div class="setting-label">Groq API Key</div>
         <input class="setting-input" type="password" id="groqKey" placeholder="gsk_...">
+        <button class="key-toggle" onclick="toggleKey()">表示</button>
       </div>
       <button class="save-btn" onclick="saveKeys()">保存する</button>
     </div>
   </div>
+
 </div>
 
 <script>
-// ========== Stars ==========
+// ===== Stars =====
 const canvas = document.getElementById('stars');
 const ctx = canvas.getContext('2d');
-let stars = [];
+let stars = [], shootingStars = [], t = 0;
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
 
 function initStars() {
-  stars = [];
-  for (let i = 0; i < 180; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.4 + 0.2,
-      alpha: Math.random(),
-      speed: Math.random() * 0.008 + 0.002,
-      phase: Math.random() * Math.PI * 2
-    });
-  }
+  stars = Array.from({length: 180}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.4 + 0.2,
+    speed: Math.random() * 0.008 + 0.002,
+    phase: Math.random() * Math.PI * 2
+  }));
 }
 
-function drawStars(t) {
+function drawStars() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   stars.forEach(s => {
     const a = 0.3 + 0.7 * Math.abs(Math.sin(s.phase + t * s.speed));
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,220,255,${a})`;
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(200,220,255,${a})`; ctx.fill();
   });
-
-  // shooting stars occasionally
-  if (Math.random() < 0.003) spawnStar();
-}
-
-let shootingStars = [];
-function spawnStar() {
-  const x = Math.random() * canvas.width * 0.7;
-  const y = Math.random() * canvas.height * 0.4;
-  shootingStars.push({ x, y, vx: 4 + Math.random() * 3, vy: 2 + Math.random() * 2, life: 1 });
-}
-
-function drawShootingStars() {
+  if (Math.random() < 0.003) shootingStars.push({
+    x: Math.random()*canvas.width*0.7, y: Math.random()*canvas.height*0.4,
+    vx: 4+Math.random()*3, vy: 2+Math.random()*2, life: 1
+  });
   shootingStars = shootingStars.filter(s => s.life > 0);
   shootingStars.forEach(s => {
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y);
-    ctx.lineTo(s.x - s.vx * 12, s.y - s.vy * 12);
-    const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * 12, s.y - s.vy * 12);
-    grad.addColorStop(0, `rgba(200,220,255,${s.life})`);
-    grad.addColorStop(1, 'transparent');
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x-s.vx*12, s.y-s.vy*12);
+    const g = ctx.createLinearGradient(s.x, s.y, s.x-s.vx*12, s.y-s.vy*12);
+    g.addColorStop(0, `rgba(200,220,255,${s.life})`); g.addColorStop(1,'transparent');
+    ctx.strokeStyle = g; ctx.lineWidth = 1.5; ctx.stroke();
     s.x += s.vx; s.y += s.vy; s.life -= 0.04;
   });
 }
 
-let t = 0;
-function animate() {
-  t++;
-  drawStars(t);
-  drawShootingStars();
-  requestAnimationFrame(animate);
-}
-
-resizeCanvas();
-initStars();
-animate();
+(function animate() { t++; drawStars(); requestAnimationFrame(animate); })();
+resizeCanvas(); initStars();
 window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
 
-// ========== Moon info ==========
+// ===== Astro =====
 function getMoonAge() {
-  const now = new Date();
-  const ref = new Date('2000-01-06');
-  const diff = (now - ref) / (1000 * 60 * 60 * 24);
-  return diff % 29.53;
+  return ((new Date() - new Date('2000-01-06')) / 86400000) % 29.53;
 }
-
-function getMoonPhaseName(age) {
-  if (age < 1.85) return '🌑 新月';
-  if (age < 7.38) return '🌒 三日月';
-  if (age < 9.22) return '🌓 上弦の月';
-  if (age < 14.77) return '🌔 十三夜月';
-  if (age < 16.61) return '🌕 満月';
-  if (age < 22.15) return '🌖 十六夜月';
-  if (age < 23.99) return '🌗 下弦の月';
+function getMoonPhase(a) {
+  if (a < 1.85)  return '🌑 新月';
+  if (a < 7.38)  return '🌒 三日月';
+  if (a < 9.22)  return '🌓 上弦の月';
+  if (a < 14.77) return '🌔 十三夜月';
+  if (a < 16.61) return '🌕 満月';
+  if (a < 22.15) return '🌖 十六夜月';
+  if (a < 23.99) return '🌗 下弦の月';
   return '🌘 有明月';
 }
-
 function getKyusei() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth() + 1;
-  const d = now.getDate();
-  const base = (y - 1984) % 9;
-  const names = ['五黄土星', '四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星'];
-  return names[((base % 9) + 9) % 9];
+  const base = (new Date().getFullYear() - 1984) % 9;
+  return ['五黄土星','四緑木星','三碧木星','二黒土星','一白水星','九紫火星','八白土星','七赤金星','六白金星'][((base%9)+9)%9];
 }
-
-function getZodiac() {
-  const now = new Date();
-  const m = now.getMonth() + 1;
-  const d = now.getDate();
-  const signs = [
-    [1,20,'水瓶座'],[2,19,'魚座'],[3,21,'牡羊座'],[4,20,'牡牛座'],
-    [5,21,'双子座'],[6,21,'蟹座'],[7,23,'獅子座'],[8,23,'乙女座'],
-    [9,23,'天秤座'],[10,23,'蠍座'],[11,22,'射手座'],[12,22,'山羊座']
-  ];
-  for (const [cm, cd, name] of signs) {
+function getZodiac(m, d) {
+  const cuts = [[1,20,'水瓶座'],[2,19,'魚座'],[3,21,'牡羊座'],[4,20,'牡牛座'],
+                [5,21,'双子座'],[6,21,'蟹座'],[7,23,'獅子座'],[8,23,'乙女座'],
+                [9,23,'天秤座'],[10,23,'蠍座'],[11,22,'射手座'],[12,22,'山羊座']];
+  for (const [cm, cd, name] of cuts) {
     if (m === cm && d < cd) return name;
-    if (m === ((cm % 12) + 1) && d >= cd) return name;
+    if (m === ((cm%12)+1) && d >= cd) return name;
   }
   return '山羊座';
 }
-
-function renderMoonInfo() {
-  const age = getMoonAge();
-  const phase = getMoonPhaseName(age);
-  const kyusei = getKyusei();
-  const zodiac = getZodiac();
-  const el = document.getElementById('moonInfo');
-  el.innerHTML = `
-    <span class="moon-badge">${phase}</span>
-    <span class="moon-badge">月齢 ${Math.floor(age)}</span>
-    <span class="moon-badge">${kyusei}</span>
-    <span class="moon-badge">${zodiac}</span>
-  `;
-  return { phase, age: Math.floor(age), kyusei, zodiac };
+function getBirthZodiac() {
+  const v = document.getElementById('userBirth').value;
+  if (!v) return null;
+  const d = new Date(v);
+  return getZodiac(d.getMonth()+1, d.getDate());
+}
+function getAge() {
+  const v = document.getElementById('userBirth').value;
+  if (!v) return null;
+  const b = new Date(v), now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  if (now < new Date(now.getFullYear(), b.getMonth(), b.getDate())) age--;
+  return age;
 }
 
-const moonData = renderMoonInfo();
+const moonAge   = getMoonAge();
+const moonPhase = getMoonPhase(moonAge);
+const kyusei    = getKyusei();
+const now       = new Date();
+const todayZodiac = getZodiac(now.getMonth()+1, now.getDate());
 
-// ========== Theme ==========
-let selectedTheme = 'love';
-const themeLabels = {
-  love: '恋愛・パートナーシップ',
-  work: '仕事・使命',
-  self: '自己成長・自分磨き',
-  relation: '人間関係・縁'
+document.getElementById('moonBadges').innerHTML =
+  [moonPhase, `月齢 ${Math.floor(moonAge)}`, kyusei, todayZodiac]
+  .map(b => `<span class="badge">${b}</span>`).join('');
+
+// ===== State =====
+let selectedGender = 'female';
+let selectedTheme  = 'love';
+const themeLabels  = {
+  love:'恋愛・パートナーシップ', work:'仕事・使命',
+  self:'自己成長・自分磨き',     relation:'人間関係・縁'
 };
 
+function selectGender(btn) {
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedGender = btn.dataset.gender;
+}
 function selectTheme(btn) {
   document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedTheme = btn.dataset.theme;
 }
 
-// ========== API ==========
-function loadKeys() {
-  document.getElementById('gemmaKey').value = localStorage.getItem('oracle_gemma') || '';
+// ===== Storage =====
+function loadData() {
   document.getElementById('groqKey').value = localStorage.getItem('oracle_groq') || '';
+  const p = JSON.parse(localStorage.getItem('oracle_profile') || '{}');
+  if (p.name)   document.getElementById('userName').value = p.name;
+  if (p.birth)  document.getElementById('userBirth').value = p.birth;
+  if (p.gender) {
+    selectedGender = p.gender;
+    document.querySelectorAll('.gender-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.gender === p.gender));
+  }
 }
-
+function saveProfile() {
+  localStorage.setItem('oracle_profile', JSON.stringify({
+    name:   document.getElementById('userName').value.trim(),
+    birth:  document.getElementById('userBirth').value,
+    gender: selectedGender
+  }));
+}
 function saveKeys() {
-  localStorage.setItem('oracle_gemma', document.getElementById('gemmaKey').value.trim());
   localStorage.setItem('oracle_groq', document.getElementById('groqKey').value.trim());
   document.getElementById('settingsPanel').classList.remove('show');
   alert('✦ APIキーを保存しました');
 }
-
-loadKeys();
-
 function toggleSettings() {
   document.getElementById('settingsPanel').classList.toggle('show');
 }
-
-async function callGemma(prompt, key) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${key}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    }
-  );
-  const data = await res.json();
-  return data.candidates[0].content.parts[0].text;
+function toggleKey() {
+  const inp = document.getElementById('groqKey');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
 }
+loadData();
 
-async function callGroq(prompt, key) {
+// ===== API =====
+async function callGroq(prompt) {
+  const key = localStorage.getItem('oracle_groq') || '';
+  if (!key) throw new Error('no key');
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 600
+      max_tokens: 600, temperature: 0.9
     })
   });
   const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
   return data.choices[0].message.content;
 }
 
+// ===== Generate =====
 async function generateMessage() {
-  const gemmaKey = localStorage.getItem('oracle_gemma') || '';
-  const groqKey = localStorage.getItem('oracle_groq') || '';
-
-  if (!gemmaKey && !groqKey) {
-    alert('⚙ APIキーを設定してください');
+  const key = localStorage.getItem('oracle_groq') || '';
+  if (!key) {
+    alert('⚙ Groq APIキーを設定してください');
     document.getElementById('settingsPanel').classList.add('show');
     return;
   }
 
-  const btn = document.getElementById('genBtn');
-  const card = document.getElementById('card');
+  const name    = document.getElementById('userName').value.trim() || 'あなた';
+  const age     = getAge();
+  const bZodiac = getBirthZodiac();
+  const birth   = document.getElementById('userBirth').value;
+  const gMap    = { female:'女性', male:'男性', other:'その他' };
+
+  saveProfile();
+
+  const btn   = document.getElementById('genBtn');
+  const card  = document.getElementById('card');
   const msgEl = document.getElementById('messageText');
+  const toEl  = document.getElementById('messageTo');
 
   btn.disabled = true;
   btn.textContent = '✦ Luna が語りかけています… ✦';
   card.classList.add('show');
   msgEl.className = 'message-text loading';
   msgEl.textContent = '月の光を読み解いています…';
+  toEl.textContent = '';
 
-  const now = new Date();
-  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+  const dateStr   = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+  const birthInfo = birth ? `生年月日：${birth}（${age}歳・${bZodiac}）` : '生年月日：未入力';
 
-  const prompt = `あなたは「Luna」という名の月の精霊です。スピリチュアルで詩的、女性が共感できる優しい言葉で語りかけます。宗教的・押しつけがましい表現は使わず、自然で温かいメッセージをください。
+  const prompt = `あなたは「Luna」という名の月の精霊です。スピリチュアルで詩的、温かく共感できる言葉で語りかけます。宗教的・押しつけがましい表現は一切使わず、自然な言葉で寄り添います。
 
-今日の情報：
-- 日付：${dateStr}
-- 月相：${moonData.phase}（月齢${moonData.age}）
-- 九星：${moonData.kyusei}
-- 星座の時期：${moonData.zodiac}
+【この人の情報】
+- お名前：${name}
+- ${birthInfo}
+- 性別：${gMap[selectedGender]}
 - テーマ：${themeLabels[selectedTheme]}
 
-Lunaとして、今日この人に向けた150〜200文字の日本語メッセージを書いてください。
-・「あなた」に語りかける二人称で
-・月や星・自然のイメージを散りばめて
-・最後に今日のキーワードを「✦ 今日の言葉：〇〇 ✦」の形で一つ添えて
-・前置きや説明なしにメッセージだけを出力`;
+【今日の星の情報】
+- 日付：${dateStr}
+- 月相：${moonPhase}（月齢${Math.floor(moonAge)}）
+- 九星：${kyusei}
+- 今日の星座の時期：${todayZodiac}
 
-  let text = '';
+Lunaとして、${name}さんへ今日だけの特別なメッセージを200〜250文字で書いてください。
+条件：
+・「${name}さん、」で始める
+・生年月日や星座・月相を自然に織り込む
+・月・星・自然のイメージを散りばめる
+・最後に「✦ 今日の言葉：〇〇 ✦」を一行添える
+・前置き・説明・マークダウンなし、メッセージ本文だけ出力`;
+
   try {
-    if (gemmaKey) {
-      text = await callGemma(prompt, gemmaKey);
-    } else {
-      throw new Error('no gemma');
-    }
+    const text = await callGroq(prompt);
+    msgEl.className = 'message-text';
+    msgEl.textContent = text;
+    toEl.textContent  = `✦ ${name}さんへ ✦`;
+    document.getElementById('cardDate').textContent = `${dateStr} · ${moonPhase}`;
   } catch(e) {
-    try {
-      if (groqKey) {
-        text = await callGroq(prompt, groqKey);
-      } else {
-        throw new Error('no groq');
-      }
-    } catch(e2) {
-      text = '月の光が届きませんでした。APIキーをご確認ください。';
-    }
+    msgEl.className = 'message-text';
+    msgEl.textContent = '月の光が届きませんでした。APIキーをご確認ください。';
+    toEl.textContent = '';
   }
-
-  msgEl.className = 'message-text';
-  msgEl.textContent = text;
-  document.getElementById('cardDate').textContent = `${dateStr} · ${moonData.phase}`;
 
   btn.disabled = false;
   btn.textContent = '✦ 今日のメッセージを受け取る ✦';
 }
 
+// ===== Share =====
 function shareMessage() {
+  const name = document.getElementById('userName').value.trim() || 'あなた';
   const text = document.getElementById('messageText').textContent;
-  if (navigator.share) {
-    navigator.share({ title: 'Oracle Layer - Lunaからのメッセージ', text });
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => alert('✦ コピーしました'));
-  }
+  const msg  = `【Oracle Layer】${name}さんへ Lunaからのメッセージ\n\n${text}`;
+  if (navigator.share) navigator.share({ title: 'Oracle Layer', text: msg });
+  else if (navigator.clipboard) navigator.clipboard.writeText(msg).then(() => alert('✦ コピーしました'));
 }
 </script>
+
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('Oracle Layer SW registered'))
-      .catch(e => console.log('SW error:', e));
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
 }
 </script>
