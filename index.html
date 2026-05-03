@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050d1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Oracle Layer">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<title>Oracle Layer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050d1a;
+    --bg2: #0a1628;
+    --blue: #4a9eff;
+    --blue-dim: #1e4a8a;
+    --silver: #c8d8f0;
+    --silver-dim: #6a8aaa;
+    --gold: #d4af6a;
+    --white: #e8f0ff;
+    --glow: rgba(74,158,255,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Star canvas */
+  #stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 24px 0 16px;
+    animation: fadeDown 1s ease both;
+  }
+
+  .logo {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, var(--silver), var(--blue), var(--silver));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--silver-dim);
+    margin-top: 4px;
+  }
+
+  /* Moon display */
+  .moon-section {
+    text-align: center;
+    margin: 20px 0;
+    animation: fadeIn 1.2s ease both;
+  }
+
+  .moon-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px;
+    position: relative;
+  }
+
+  .moon-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 18px rgba(74,158,255,0.6));
+    animation: moonPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes moonPulse {
+    0%, 100% { filter: drop-shadow(0 0 18px rgba(74,158,255,0.6)); }
+    50% { filter: drop-shadow(0 0 32px rgba(74,158,255,0.9)); }
+  }
+
+  .moon-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .moon-badge {
+    background: rgba(74,158,255,0.1);
+    border: 1px solid rgba(74,158,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--silver);
+    letter-spacing: 1px;
+  }
+
+  /* Theme selector */
+  .theme-section {
+    margin: 20px 0;
+    animation: fadeIn 1.4s ease both;
+  }
+
+  .theme-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--silver-dim);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .theme-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(74,158,255,0.2);
+    border-radius: 10px;
+    padding: 10px 4px;
+    color: var(--silver-dim);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .theme-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
+
+  .theme-btn:hover, .theme-btn.active {
+    background: rgba(74,158,255,0.15);
+    border-color: var(--blue);
+    color: var(--silver);
+    box-shadow: 0 0 12px rgba(74,158,255,0.2);
+  }
+
+  /* Generate button */
+  .gen-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1a3a6a, #0d2244);
+    border: 1px solid var(--blue-dim);
+    border-radius: 14px;
+    padding: 16px;
+    color: var(--silver);
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    margin: 16px 0;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 1.6s ease both;
+  }
+
+  .gen-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(74,158,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+
+  .gen-btn:hover::before { left: 100%; }
+
+  .gen-btn:hover {
+    border-color: var(--blue);
+    box-shadow: 0 0 20px rgba(74,158,255,0.3);
+    color: var(--white);
+  }
+
+  .gen-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Message card */
+  .card {
+    background: linear-gradient(145deg, rgba(10,22,40,0.95), rgba(5,13,26,0.98));
+    border: 1px solid rgba(74,158,255,0.25);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-top: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,50,0.5), inset 0 1px 0 rgba(200,216,240,0.08);
+    animation: cardReveal 0.8s ease both;
+    display: none;
+  }
+
+  .card.show { display: block; }
+
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(74,158,255,0.15);
+  }
+
+  .luna-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a3a6a, #0d2244);
+    border: 1.5px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(74,158,255,0.3);
+  }
+
+  .luna-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--blue);
+    letter-spacing: 2px;
+  }
+
+  .luna-title {
+    font-size: 10px;
+    color: var(--silver-dim);
+    letter-spacing: 1px;
+  }
+
+  .message-text {
+    font-size: 15px;
+    line-height: 2;
+    color: var(--white);
+    font-weight: 300;
+    white-space: pre-wrap;
+  }
+
+  .message-text.loading {
+    color: var(--silver-dim);
+    font-style: italic;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .card-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(74,158,255,0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-date {
+    font-size: 11px;
+    color: var(--silver-dim);
+    letter-spacing: 1px;
+  }
+
+  .share-btn {
+    background: transparent;
+    border: 1px solid rgba(74,158,255,0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    color: var(--silver-dim);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+
+  .share-btn:hover {
+    border-color: var(--blue);
+    color: var(--silver);
+  }
+
+  /* Settings */
+  .settings-section {
+    margin-top: 28px;
+    animation: fadeIn 1.8s ease both;
+  }
+
+  .settings-toggle {
+    background: transparent;
+    border: none;
+    color: var(--silver-dim);
+    font-size: 11px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    font-family: 'Noto Serif JP', serif;
+  }
+
+  .settings-toggle:hover { color: var(--silver); }
+
+  .settings-panel {
+    display: none;
+    margin-top: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(74,158,255,0.15);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .settings-panel.show { display: block; }
+
+  .setting-row {
+    margin-bottom: 12px;
+  }
+
+  .setting-label {
+    font-size: 11px;
+    color: var(--silver-dim);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .setting-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(74,158,255,0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--silver);
+    font-size: 13px;
+    font-family: monospace;
+    outline: none;
+  }
+
+  .setting-input:focus { border-color: var(--blue); }
+
+  .save-btn {
+    background: rgba(74,158,255,0.15);
+    border: 1px solid var(--blue-dim);
+    border-radius: 8px;
+    padding: 8px 20px;
+    color: var(--silver);
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    margin-top: 4px;
+  }
+
+  .save-btn:hover { background: rgba(74,158,255,0.25); }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    opacity: 0.4;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue-dim));
+  }
+
+  .divider::after { background: linear-gradient(90deg, var(--blue-dim), transparent); }
+
+  .divider span { font-size: 14px; }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Shooting star */
+  .shooting-star {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">ORACLE LAYER</div>
+    <div class="logo-sub">月の精霊 Luna からのメッセージ</div>
+  </div>
+
+  <!-- Moon -->
+  <div class="moon-section">
+    <div class="moon-circle">
+      <svg class="moon-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="moonGrad" cx="40%" cy="40%">
+            <stop offset="0%" stop-color="#c8d8f0"/>
+            <stop offset="60%" stop-color="#7a9fcc"/>
+            <stop offset="100%" stop-color="#2a4a7a"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <circle cx="50" cy="50" r="42" fill="url(#moonGrad)" filter="url(#glow)"/>
+        <circle cx="35" cy="38" r="5" fill="rgba(100,140,200,0.3)"/>
+        <circle cx="60" cy="55" r="7" fill="rgba(100,140,200,0.2)"/>
+        <circle cx="45" cy="62" r="3" fill="rgba(100,140,200,0.25)"/>
+      </svg>
+    </div>
+    <div class="moon-info" id="moonInfo">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Theme selector -->
+  <div class="theme-section">
+    <div class="theme-label">— テーマを選ぶ —</div>
+    <div class="theme-grid">
+      <button class="theme-btn active" data-theme="love" onclick="selectTheme(this)">
+        <span class="icon">💫</span>恋愛
+      </button>
+      <button class="theme-btn" data-theme="work" onclick="selectTheme(this)">
+        <span class="icon">🌙</span>仕事
+      </button>
+      <button class="theme-btn" data-theme="self" onclick="selectTheme(this)">
+        <span class="icon">✨</span>自分磨き
+      </button>
+      <button class="theme-btn" data-theme="relation" onclick="selectTheme(this)">
+        <span class="icon">🌟</span>人間関係
+      </button>
+    </div>
+  </div>
+
+  <!-- Generate button -->
+  <button class="gen-btn" id="genBtn" onclick="generateMessage()">
+    ✦ 今日のメッセージを受け取る ✦
+  </button>
+
+  <!-- Message card -->
+  <div class="card" id="card">
+    <div class="card-header">
+      <div class="luna-avatar">🌙</div>
+      <div>
+        <div class="luna-name">LUNA</div>
+        <div class="luna-title">月の精霊 · 星の導き手</div>
+      </div>
+    </div>
+    <div class="message-text" id="messageText"></div>
+    <div class="card-footer">
+      <div class="card-date" id="cardDate"></div>
+      <button class="share-btn" onclick="shareMessage()">🔗 シェア</button>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="settings-section">
+    <button class="settings-toggle" onclick="toggleSettings()">⚙ API設定</button>
+    <div class="settings-panel" id="settingsPanel">
+      <div class="setting-row">
+        <div class="setting-label">Gemma API Key (Google AI Studio)</div>
+        <input class="setting-input" type="password" id="gemmaKey" placeholder="AIza...">
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Groq API Key</div>
+        <input class="setting-input" type="password" id="groqKey" placeholder="gsk_...">
+      </div>
+      <button class="save-btn" onclick="saveKeys()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== Stars ==========
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 180; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.2,
+      alpha: Math.random(),
+      speed: Math.random() * 0.008 + 0.002,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const a = 0.3 + 0.7 * Math.abs(Math.sin(s.phase + t * s.speed));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,220,255,${a})`;
+    ctx.fill();
+  });
+
+  // shooting stars occasionally
+  if (Math.random() < 0.003) spawnStar();
+}
+
+let shootingStars = [];
+function spawnStar() {
+  const x = Math.random() * canvas.width * 0.7;
+  const y = Math.random() * canvas.height * 0.4;
+  shootingStars.push({ x, y, vx: 4 + Math.random() * 3, vy: 2 + Math.random() * 2, life: 1 });
+}
+
+function drawShootingStars() {
+  shootingStars = shootingStars.filter(s => s.life > 0);
+  shootingStars.forEach(s => {
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x - s.vx * 12, s.y - s.vy * 12);
+    const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * 12, s.y - s.vy * 12);
+    grad.addColorStop(0, `rgba(200,220,255,${s.life})`);
+    grad.addColorStop(1, 'transparent');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    s.x += s.vx; s.y += s.vy; s.life -= 0.04;
+  });
+}
+
+let t = 0;
+function animate() {
+  t++;
+  drawStars(t);
+  drawShootingStars();
+  requestAnimationFrame(animate);
+}
+
+resizeCanvas();
+initStars();
+animate();
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+// ========== Moon info ==========
+function getMoonAge() {
+  const now = new Date();
+  const ref = new Date('2000-01-06');
+  const diff = (now - ref) / (1000 * 60 * 60 * 24);
+  return diff % 29.53;
+}
+
+function getMoonPhaseName(age) {
+  if (age < 1.85) return '🌑 新月';
+  if (age < 7.38) return '🌒 三日月';
+  if (age < 9.22) return '🌓 上弦の月';
+  if (age < 14.77) return '🌔 十三夜月';
+  if (age < 16.61) return '🌕 満月';
+  if (age < 22.15) return '🌖 十六夜月';
+  if (age < 23.99) return '🌗 下弦の月';
+  return '🌘 有明月';
+}
+
+function getKyusei() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const base = (y - 1984) % 9;
+  const names = ['五黄土星', '四緑木星', '三碧木星', '二黒土星', '一白水星', '九紫火星', '八白土星', '七赤金星', '六白金星'];
+  return names[((base % 9) + 9) % 9];
+}
+
+function getZodiac() {
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const signs = [
+    [1,20,'水瓶座'],[2,19,'魚座'],[3,21,'牡羊座'],[4,20,'牡牛座'],
+    [5,21,'双子座'],[6,21,'蟹座'],[7,23,'獅子座'],[8,23,'乙女座'],
+    [9,23,'天秤座'],[10,23,'蠍座'],[11,22,'射手座'],[12,22,'山羊座']
+  ];
+  for (const [cm, cd, name] of signs) {
+    if (m === cm && d < cd) return name;
+    if (m === ((cm % 12) + 1) && d >= cd) return name;
+  }
+  return '山羊座';
+}
+
+function renderMoonInfo() {
+  const age = getMoonAge();
+  const phase = getMoonPhaseName(age);
+  const kyusei = getKyusei();
+  const zodiac = getZodiac();
+  const el = document.getElementById('moonInfo');
+  el.innerHTML = `
+    <span class="moon-badge">${phase}</span>
+    <span class="moon-badge">月齢 ${Math.floor(age)}</span>
+    <span class="moon-badge">${kyusei}</span>
+    <span class="moon-badge">${zodiac}</span>
+  `;
+  return { phase, age: Math.floor(age), kyusei, zodiac };
+}
+
+const moonData = renderMoonInfo();
+
+// ========== Theme ==========
+let selectedTheme = 'love';
+const themeLabels = {
+  love: '恋愛・パートナーシップ',
+  work: '仕事・使命',
+  self: '自己成長・自分磨き',
+  relation: '人間関係・縁'
+};
+
+function selectTheme(btn) {
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedTheme = btn.dataset.theme;
+}
+
+// ========== API ==========
+function loadKeys() {
+  document.getElementById('gemmaKey').value = localStorage.getItem('oracle_gemma') || '';
+  document.getElementById('groqKey').value = localStorage.getItem('oracle_groq') || '';
+}
+
+function saveKeys() {
+  localStorage.setItem('oracle_gemma', document.getElementById('gemmaKey').value.trim());
+  localStorage.setItem('oracle_groq', document.getElementById('groqKey').value.trim());
+  document.getElementById('settingsPanel').classList.remove('show');
+  alert('✦ APIキーを保存しました');
+}
+
+loadKeys();
+
+function toggleSettings() {
+  document.getElementById('settingsPanel').classList.toggle('show');
+}
+
+async function callGemma(prompt, key) {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    }
+  );
+  const data = await res.json();
+  return data.candidates[0].content.parts[0].text;
+}
+
+async function callGroq(prompt, key) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 600
+    })
+  });
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+async function generateMessage() {
+  const gemmaKey = localStorage.getItem('oracle_gemma') || '';
+  const groqKey = localStorage.getItem('oracle_groq') || '';
+
+  if (!gemmaKey && !groqKey) {
+    alert('⚙ APIキーを設定してください');
+    document.getElementById('settingsPanel').classList.add('show');
+    return;
+  }
+
+  const btn = document.getElementById('genBtn');
+  const card = document.getElementById('card');
+  const msgEl = document.getElementById('messageText');
+
+  btn.disabled = true;
+  btn.textContent = '✦ Luna が語りかけています… ✦';
+  card.classList.add('show');
+  msgEl.className = 'message-text loading';
+  msgEl.textContent = '月の光を読み解いています…';
+
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+
+  const prompt = `あなたは「Luna」という名の月の精霊です。スピリチュアルで詩的、女性が共感できる優しい言葉で語りかけます。宗教的・押しつけがましい表現は使わず、自然で温かいメッセージをください。
+
+今日の情報：
+- 日付：${dateStr}
+- 月相：${moonData.phase}（月齢${moonData.age}）
+- 九星：${moonData.kyusei}
+- 星座の時期：${moonData.zodiac}
+- テーマ：${themeLabels[selectedTheme]}
+
+Lunaとして、今日この人に向けた150〜200文字の日本語メッセージを書いてください。
+・「あなた」に語りかける二人称で
+・月や星・自然のイメージを散りばめて
+・最後に今日のキーワードを「✦ 今日の言葉：〇〇 ✦」の形で一つ添えて
+・前置きや説明なしにメッセージだけを出力`;
+
+  let text = '';
+  try {
+    if (gemmaKey) {
+      text = await callGemma(prompt, gemmaKey);
+    } else {
+      throw new Error('no gemma');
+    }
+  } catch(e) {
+    try {
+      if (groqKey) {
+        text = await callGroq(prompt, groqKey);
+      } else {
+        throw new Error('no groq');
+      }
+    } catch(e2) {
+      text = '月の光が届きませんでした。APIキーをご確認ください。';
+    }
+  }
+
+  msgEl.className = 'message-text';
+  msgEl.textContent = text;
+  document.getElementById('cardDate').textContent = `${dateStr} · ${moonData.phase}`;
+
+  btn.disabled = false;
+  btn.textContent = '✦ 今日のメッセージを受け取る ✦';
+}
+
+function shareMessage() {
+  const text = document.getElementById('messageText').textContent;
+  if (navigator.share) {
+    navigator.share({ title: 'Oracle Layer - Lunaからのメッセージ', text });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => alert('✦ コピーしました'));
+  }
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('Oracle Layer SW registered'))
+      .catch(e => console.log('SW error:', e));
+  });
+}
+</script>
+</body>
+</html>
